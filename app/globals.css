@@ -1,0 +1,146 @@
+@import "tailwindcss";
+
+/* Tailwind 4 + DaisyUI 5, CSS-first: this file is the whole design system
+   (there is no tailwind.config). Only DaisyUI's theme colors are used, no
+   DaisyUI components. themes:false drops the built-in themes; the layout owns
+   the page background via bg-base-100 on <body>. */
+@plugin "daisyui" {
+  themes: false;
+  exclude: rootcolor, rootscrollgutter, rootscrolllock, scrollbar, svg, properties;
+  logs: false;
+}
+
+/* dark: follows <html data-theme="dark"> (set by lib/theme.tsx). */
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
+/* ── Themes ─────────────────────────────────────────────────────────────────
+   Neutrals (base-*, neutral) are shared by every Gaidd template; the theme
+   colors (primary + the accent pairs in @theme below) are Gaidd's. To rebrand,
+   change --color-primary and the accent pairs; leave the neutrals. */
+@plugin "daisyui/theme" {
+  name: "light";
+  default: true;
+  prefersdark: false;
+  color-scheme: light;
+  --color-base-100: #F9F9F9;
+  --color-base-200: #FCFCFC;
+  --color-base-300: #EBEBEB;
+  --color-base-content: #3D3D3D; /* Ink */
+  --color-neutral: #777777;      /* Iron */
+  --color-neutral-content: #FFFFFF;
+  --color-primary: #2A2A2A;      /* Charcoal */
+  --color-primary-content: #FFFFFF;
+  --color-secondary: #2A2A2A;
+  --color-secondary-content: #FFFFFF;
+  --color-accent: #2A2A2A;
+  --color-accent-content: #FFFFFF;
+  /* Status surfaces are the pale accents with ink text (as on gaidd.co). */
+  --color-success: #DFF1DC;      /* Honeydew */
+  --color-success-content: #3D3D3D;
+  --color-warning: #FFF1B7;      /* Vanilla */
+  --color-warning-content: #3D3D3D;
+  --color-error: #F9D6D4;        /* Rose */
+  --color-error-content: #3D3D3D;
+  --color-info: #B9E2F0;         /* Azure */
+  --color-info-content: #3D3D3D;
+}
+@plugin "daisyui/theme" {
+  name: "dark";
+  default: false;
+  prefersdark: false;
+  color-scheme: dark;
+  --color-base-100: #1A1A1A;
+  --color-base-200: #202020;
+  --color-base-300: #2A2A2A;
+  --color-base-content: #F2F2F2;
+  --color-neutral: #9CA3AF;
+  --color-neutral-content: #1A1A1A;
+  /* Charcoal disappears on a dark page, so primary inverts. */
+  --color-primary: #F2F2F2;
+  --color-primary-content: #1A1A1A;
+  --color-secondary: #F2F2F2;
+  --color-secondary-content: #1A1A1A;
+  --color-accent: #F2F2F2;
+  --color-accent-content: #1A1A1A;
+  --color-success: #2B3A29;
+  --color-success-content: #DFF1DC;
+  --color-warning: #3A3624;
+  --color-warning-content: #FFF1B7;
+  --color-error: #3D2B2A;
+  --color-error-content: #F9D6D4;
+  --color-info: #24343A;
+  --color-info-content: #B9E2F0;
+}
+
+@theme {
+  /* next/font sets --font-inter-tight on <html> (app/layout.tsx). Swap
+     --font-display for your own display face. */
+  --font-sans: var(--font-inter-tight), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-inter-tight), ui-sans-serif, system-ui, sans-serif;
+
+  /* Gaidd accents: a pale tint for surfaces/fills, and a high-contrast
+     partner for text and icons on light surfaces. Use them as pairs, e.g.
+     "text-sage fill-honeydew" or "bg-azure text-aviation". */
+  --color-vanilla:   #FFF1B7; /* sand partner */
+  --color-azure:     #B9E2F0; /* aviation partner */
+  --color-lavender:  #EDDDF4; /* amethyst partner */
+  --color-honeydew:  #DFF1DC; /* sage partner */
+  --color-rose:      #F9D6D4; /* teracotta partner */
+
+  --color-sand:      #AAA17F;
+  --color-aviation:  #6C8F9B;
+  --color-amethyst:  #8B59A0;
+  --color-sage:      #629D58;
+  --color-teracotta: #AA6C6C;
+
+  /* The grayscale. */
+  --color-chalk:    #F3F3F3;
+  --color-fog:      #DDDDDD;
+  --color-silver:   #DBDBDB;
+  --color-ash:      #BABABA;
+  --color-stone:    #959595;
+  --color-iron:     #777777;
+  --color-graphite: #424242;
+  --color-charcoal: #2A2A2A;
+  --color-ink:      #3D3D3D;
+
+  /* HoldButton: the wave on top of the fill is two wavelengths wide
+     (w-[200%]), so sliding it -50% loops seamlessly. */
+  --animate-hold-wave: hold-wave 1.1s linear infinite;
+  @keyframes hold-wave {
+    to { transform: translateX(-50%); }
+  }
+}
+
+@layer base {
+  /* Bare `border` uses the theme hairline instead of currentColor. */
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-base-300);
+  }
+  input::placeholder,
+  textarea::placeholder {
+    color: var(--color-neutral);
+  }
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+  body {
+    background: var(--color-base-100);
+    color: var(--color-base-content);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+/* Headings: display face, tight. Size and color come from classes. */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
